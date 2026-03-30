@@ -108,6 +108,3 @@ From the frontend directory:
 - Alert acknowledgement workflow
 - Unit and integration test expansion
 
-## License
-
-This project is intended for educational and prototype use.
