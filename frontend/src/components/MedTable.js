@@ -5,7 +5,7 @@ export default function MedTable({ meds, selected }) {
   const [page, setPage] = useState(1);
 
   const filtered = selected
-    ? meds.filter(m => m.ghost_id === selected.ghost_id)
+    ? meds.filter((m) => m.identity_key === selected.identity_key)
     : meds;
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -18,10 +18,10 @@ export default function MedTable({ meds, selected }) {
   }, [selected, pageSize]);
 
   return (
-    <div className="glass p-4 overflow-auto max-h-[400px]">
-      <h2 className="mb-1 text-lg font-semibold">Project Lazarus - Pharmacy Portal</h2>
-      <p className="mb-2 text-sm text-slate-800">
-        Showing {paged.length ? start + 1 : 0}-{Math.min(start + pageSize, filtered.length)} of {filtered.length} medication records{selected ? ` for ${selected.ghost_id}` : ""}
+    <div className="glass max-h-[400px] overflow-auto p-4">
+      <h2 className="mb-1 text-lg font-semibold text-white">Project Lazarus - Pharmacy Portal</h2>
+      <p className="mb-2 text-sm text-slate-300">
+        Showing {paged.length ? start + 1 : 0}-{Math.min(start + pageSize, filtered.length)} of {filtered.length} medication records{selected ? ` for ${selected.identity_key}` : ""}
       </p>
 
       <div className="mb-2 flex flex-wrap items-center gap-2 text-sm">
@@ -52,25 +52,27 @@ export default function MedTable({ meds, selected }) {
 
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left">
-            <th>Ghost ID</th>
-            <th>Scrambled</th>
-            <th>Decrypted</th>
+          <tr className="text-left text-slate-200">
+            <th className="py-2">Identity</th>
+            <th className="py-2">Ghost ID</th>
+            <th className="py-2">Scrambled</th>
+            <th className="py-2">Decrypted</th>
           </tr>
         </thead>
         <tbody>
           {paged.map((m, i) => (
-            <tr key={i} className="border-t border-white/10">
-              <td>{m.ghost_id}</td>
-              <td>{m.scrambled_med}</td>
-              <td>{m.decrypted_med}</td>
+            <tr key={`${m.rx_id}-${i}`} className="border-t border-white/10 text-slate-100">
+              <td className="truncate py-2">{m.identity_key}</td>
+              <td className="truncate py-2">{m.ghost_id}</td>
+              <td className="truncate py-2">{m.scrambled_med}</td>
+              <td className="truncate py-2">{m.decrypted_med}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
       {!filtered.length && (
-        <div className="mt-3 rounded-lg border border-white/20 bg-white/10 p-3 text-sm">
+        <div className="mt-3 rounded-lg border border-white/20 bg-white/10 p-3 text-sm text-white">
           No medication records available for this patient.
         </div>
       )}

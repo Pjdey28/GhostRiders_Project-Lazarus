@@ -1,6 +1,8 @@
 # Project Lazarus
 
-Project Lazarus is a full-stack healthcare intelligence dashboard that combines patient demographics, telemetry logs, and prescription audit data into a single interactive monitoring interface.
+Project Lazarus is a full-stack ICU early warning dashboard that combines patient demographics, telemetry logs, and prescription audit data into a single interactive monitoring interface.
+
+Round 2 continues from the existing dashboard instead of replacing it. The backend now resolves colliding ghost identities by parity, scores each packet with a live risk model, and streams telemetry updates over WebSockets to the frontend.
 
 The backend is a Flask API that preprocesses and serves merged data. The frontend is a React dashboard styled with Tailwind CSS.
 
@@ -8,9 +10,11 @@ The backend is a Flask API that preprocesses and serves merged data. The fronten
 
 - Unified patient intelligence view across demographics, vitals, alerts, and medications
 - On-the-fly telemetry decoding (hex heart rate to BPM)
+- Parity-based identity resolution for colliding ghost IDs
 - Medication decryption logic based on patient age
-- Risk classification (NORMAL, MEDIUM, HIGH, Unknown)
+- Rolling risk classification with live score history
 - Interactive dashboard with search, filters, selection drawer, and pagination controls
+- Socket.IO live stream for telemetry, alerts, and timeline updates
 
 ## Tech Stack
 
@@ -30,18 +34,25 @@ The backend is a Flask API that preprocesses and serves merged data. The fronten
 3. It decodes heart rate from hexadecimal values.
 4. It interpolates missing SpO2 values per ghost_id.
 5. It decrypts scrambled medication names using a shift derived from age.
-6. It merges processed sources into a master dataset and predicts risk.
-7. backend/app.py exposes API endpoints used by the frontend.
+6. It resolves colliding identities using vital-sign parity.
+7. It merges processed sources into a live monitoring frame and predicts risk.
+8. backend/app.py exposes API endpoints and a Socket.IO stream used by the frontend.
 
 ## API Endpoints
 
 Base URL: http://127.0.0.1:5000
 
 - GET /patients: ghost_id, name, age, ward
-- GET /vitals: ghost_id, decoded_bpm, spO2
-- GET /medications: ghost_id, scrambled_med, decrypted_med
-- GET /alerts: records where decoded_bpm is out of safe range
-- GET /risk: ghost_id, risk
+- GET /snapshot: full dashboard payload for the live UI
+- GET /patients: resolved patient registry with risk state
+- GET /vitals: recent telemetry timeline
+- GET /medications: resolved medication records
+- GET /alerts: high-risk alert feed
+- GET /risk: latest per-patient risk summary
+
+WebSocket:
+
+- Socket.IO stream emits `icu_snapshot` on connect and `icu_packet` for each live telemetry event.
 
 ## Local Setup
 
@@ -55,6 +66,8 @@ From the backend directory:
 4. python app.py
 
 Backend runs at http://127.0.0.1:5000
+
+The backend now requires Flask-SocketIO and Simple-WebSocket support, so keep the virtual environment active when starting it.
 
 ### 2) Frontend Setup
 
