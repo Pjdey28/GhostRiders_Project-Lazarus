@@ -60,7 +60,7 @@ def ensure_streaming():
                 stream_cursor += 1
 
             socketio.emit("icu_packet", row_to_record(row))
-            time.sleep(1)
+            time.sleep(5)
 
     thread = threading.Thread(target=broadcast, daemon=True)
     thread.start()
