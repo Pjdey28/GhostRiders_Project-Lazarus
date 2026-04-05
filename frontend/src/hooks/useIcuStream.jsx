@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 
-const API = "http://127.0.0.1:5000";
+const isLocalDev = typeof window !== "undefined" && window.location.port === "3000";
+
+// Prefer explicit env override. Otherwise:
+// - local CRA dev server -> backend on localhost:5000
+// - Docker/nginx and production reverse-proxy -> same-origin socket endpoint
+const API = process.env.REACT_APP_API_URL || (isLocalDev ? "http://127.0.0.1:5000" : "");
 
 export default function useIcuStream(handlers) {
   const handlersRef = useRef(handlers);

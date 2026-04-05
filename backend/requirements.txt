@@ -5,3 +5,4 @@ eventlet
 pandas
 numpy
 simple-websocket
+gunicorn

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Flask backend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lazarus-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+    volumes:
+      - ./backend/data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/snapshot"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - lazarus-net
+
+  # React frontend service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lazarus-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lazarus-net
+
+networks:
+  lazarus-net:
+    driver: bridge

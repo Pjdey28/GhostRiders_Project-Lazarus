@@ -6,7 +6,7 @@ export default function Timeline({ history }) {
         <span className="text-xs uppercase tracking-[0.24em] text-slate-400">Live feed</span>
       </div>
 
-      <div className="max-h-[280px] space-y-3 overflow-y-auto pr-1">
+      <div className="max-h-[400px] space-y-3 overflow-y-auto pr-1">
         {history.map((h, i) => (
           <div key={`${h.packet_id ?? i}-${i}`} className={`rounded-2xl border-l-4 p-3 ${h.risk_level === "HIGH" ? "border-rose-400 bg-rose-500/10" : h.risk_level === "MEDIUM" ? "border-amber-400 bg-amber-500/10" : "border-emerald-400 bg-emerald-500/10"}`}>
             <div className="flex items-start justify-between gap-3">

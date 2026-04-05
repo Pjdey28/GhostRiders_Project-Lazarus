@@ -18,7 +18,7 @@ export default function MedTable({ meds, selected }) {
   }, [selected, pageSize]);
 
   return (
-    <div className="glass max-h-[400px] overflow-auto p-4">
+    <div className="glass p-4">
       <h2 className="mb-1 text-lg font-semibold text-white">Project Lazarus - Pharmacy Portal</h2>
       <p className="mb-2 text-sm text-slate-300">
         Showing {paged.length ? start + 1 : 0}-{Math.min(start + pageSize, filtered.length)} of {filtered.length} medication records{selected ? ` for ${selected.identity_key}` : ""}
@@ -50,26 +50,28 @@ export default function MedTable({ meds, selected }) {
         </button>
       </div>
 
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-left text-slate-200">
-            <th className="py-2">Identity</th>
-            <th className="py-2">Ghost ID</th>
-            <th className="py-2">Scrambled</th>
-            <th className="py-2">Decrypted</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paged.map((m, i) => (
-            <tr key={`${m.rx_id}-${i}`} className="border-t border-white/10 text-slate-100">
-              <td className="truncate py-2">{m.identity_key}</td>
-              <td className="truncate py-2">{m.ghost_id}</td>
-              <td className="truncate py-2">{m.scrambled_med}</td>
-              <td className="truncate py-2">{m.decrypted_med}</td>
+      <div className="max-h-[340px] overflow-y-auto overflow-x-auto rounded-lg border border-white/10">
+        <table className="w-full text-sm">
+          <thead className="sticky top-0 z-10 bg-slate-900/90 backdrop-blur">
+            <tr className="text-left text-slate-200">
+              <th className="py-2 pl-3">Identity</th>
+              <th className="py-2">Ghost ID</th>
+              <th className="py-2">Scrambled</th>
+              <th className="py-2 pr-3">Decrypted</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paged.map((m, i) => (
+              <tr key={`${m.rx_id}-${i}`} className="border-t border-white/10 text-slate-100">
+                <td className="truncate py-2 pl-3">{m.identity_key}</td>
+                <td className="truncate py-2">{m.ghost_id}</td>
+                <td className="truncate py-2">{m.scrambled_med}</td>
+                <td className="truncate py-2 pr-3">{m.decrypted_med}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {!filtered.length && (
         <div className="mt-3 rounded-lg border border-white/20 bg-white/10 p-3 text-sm text-white">

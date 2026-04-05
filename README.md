@@ -122,6 +122,40 @@ If port 3000 is busy, run on another port in PowerShell:
 1. $env:PORT=3001
 2. npm start
 
+## Docker Deployment
+
+For containerized deployment, use Docker and Docker Compose. This is recommended for production and cloud deployments.
+
+### Quick Start
+
+From the project root directory:
+
+```bash
+docker-compose up --build
+```
+
+This will:
+- Build and start backend (Flask + Gunicorn on port 5000)
+- Build and start frontend (React + nginx on port 80)
+- Wire both services together automatically
+
+**Access the application**: Open http://localhost in your browser
+
+### Stop Containers
+
+```bash
+docker-compose down
+```
+
+### Full Docker Guide
+
+See [docker_use.md](docker_use.md) for:
+- Detailed setup instructions
+- Production deployment (AWS, DigitalOcean, Azure, etc.)
+- Configuration and environment variables
+- Troubleshooting and performance tips
+- CI/CD setup and best practices
+
 ## Build
 
 From the frontend directory:
